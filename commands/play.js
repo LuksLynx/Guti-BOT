@@ -32,7 +32,6 @@ module.exports = {
             );
         }
 
-        var connection = await voiceChannel.join();
 
         if (!ytdl.validateURL(videoUrl)) {
             let searchResult = await ytsr(videoUrl, { limit: 5 });
@@ -43,29 +42,24 @@ module.exports = {
             message.channel.send(newEmbed);
 
             const filter = m => (m.content >= 1 && m.content <= 5);
-            await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
+            videoUrl = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
                 .then(result => {
+
                     let chosen = searchResult.items[result.first().content];
                     let trueUrl = chosen.url;
 
-                    connection.play(ytdl(trueUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
-                        .on("finish", async () => {
-                            voiceChannel.leave();
-                        });
+					return trueUrl;
 
                 })
                 .catch(warning => message.channel.send('Demorou demais'))
 
-
-
         }
 
-
-
-        connection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
-            .on("finish", async () => {
-                voiceChannel.leave();
-            });
-
+        let connection = await voiceChannel.join();
+		connection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
+		.on("finish", async () => {
+			voiceChannel.leave();
+		});
+        
     }
 }

@@ -1,6 +1,6 @@
 module.exports = {
     name: 'roll',
-    descripition: 'rolar dados',
+    description: 'rolar dados',
     execute(message, args,) {
 
         

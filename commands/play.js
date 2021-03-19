@@ -1,7 +1,7 @@
 const ytdl = require('discord-ytdl-core');
 module.exports = {
     name: 'play',
-    descripition: 'play em video de youtube',
+    description: 'play em video de youtube',
     async execute(message, args,) {
         let videoUrl = args[0];
 

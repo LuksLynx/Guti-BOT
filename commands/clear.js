@@ -1,7 +1,7 @@
 const talkedRecently = new Set();
 module.exports = {
     name: 'clear',
-    descripition: 'limpa mensagens',
+    description: 'limpa mensagens',
     async execute(message, args) {
         if (message.member.hasPermission('ADMINISTRATOR')) {
             if (talkedRecently.has(message.author.id)) {  // verifica se o usuário está em cooldown no comando

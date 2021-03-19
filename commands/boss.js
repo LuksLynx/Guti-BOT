@@ -4,7 +4,7 @@ const Play = require("./play.js");
 
 module.exports = {
     name: 'boss',
-    descripition: 'toca o soundtrack de um boss disponivel',
+    description: 'toca o soundtrack de um boss disponivel',
     async execute(message, args) {
 
         const bossArray = [

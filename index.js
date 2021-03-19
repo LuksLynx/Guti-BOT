@@ -37,6 +37,8 @@ client.on('message', message => {          // onde os comandos ficam
     client.commands.get('play').execute(message, args);
   } else if (command === 'roll') {
     client.commands.get('roll').execute(message, args);
+  } else if (command === 'f95') {
+	client.commands.get('f95').execute(message, args);
   } else {
     message.channel.send('DIGITA CERTO SEU GORILA')
   }

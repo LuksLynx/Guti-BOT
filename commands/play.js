@@ -1,4 +1,7 @@
+const Discord = require("discord.js")
 const ytdl = require('discord-ytdl-core');
+const ytsr = require('ytsr');
+
 module.exports = {
     name: 'play',
     description: 'play em video de youtube',
@@ -29,18 +32,34 @@ module.exports = {
             );
         }
 
+
         if (!ytdl.validateURL(videoUrl)) {
-            return message.channel.send(
-                'Esse vídeo não existe, igual a relevância da sua vida >:)'
-            )
+            videoUrl = args.join('');
+            let searchResult = await ytsr(videoUrl, { limit: 5 });
+            const newEmbed = new Discord.MessageEmbed()
+                .setColor('#0x0099ff')
+                .setTitle('Escolhe um ai')
+                .setDescription(searchResult.items.map((item, index) => `**${index + 1}** - [${item.title}](${item.url}) **(${item.duration})**`).join("\n"))
+            message.channel.send(newEmbed);
+
+            const filter = m => (m.content >= 1 && m.content <= 5);
+            videoUrl = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
+                .then(result => {
+
+                    let chosen = searchResult.items[result.first().content-1];
+                    let trueUrl = chosen.url;
+
+					return trueUrl;
+
+                })
+                .catch(warning => message.channel.send('Demorou demais'))
+
         }
-
-        var connection = await voiceChannel.join();
-        
-        connection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), {type:'opus', volume:0.5})
-        .on("finish", async () => {
-           voiceChannel.leave(); 
-        });
-
-    }
+        this.voiceConnection = await voiceChannel.join();
+		this.voiceConnection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
+		.on("finish", async () => {
+			voiceChannel.leave();
+		});
+    },
+    voiceConnection: {}
 }

@@ -5,7 +5,7 @@ const ytsr = require('ytsr');
 module.exports = {
     name: 'play',
     descripition: 'play em video de youtube',
-    async execute(message, args,) {
+    async execute(message, args) {
         var videoUrl = args[0];
 
         const channels = message.guild.channels;
@@ -34,6 +34,7 @@ module.exports = {
 
 
         if (!ytdl.validateURL(videoUrl)) {
+            videoUrl = args.join('');
             let searchResult = await ytsr(videoUrl, { limit: 5 });
             const newEmbed = new Discord.MessageEmbed()
                 .setColor('#0x0099ff')
@@ -45,7 +46,7 @@ module.exports = {
             videoUrl = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
                 .then(result => {
 
-                    let chosen = searchResult.items[result.first().content];
+                    let chosen = searchResult.items[result.first().content-1];
                     let trueUrl = chosen.url;
 
 					return trueUrl;
@@ -54,12 +55,11 @@ module.exports = {
                 .catch(warning => message.channel.send('Demorou demais'))
 
         }
-
-        let connection = await voiceChannel.join();
-		connection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
+        this.voiceConnection = await voiceChannel.join();
+		this.voiceConnection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
 		.on("finish", async () => {
 			voiceChannel.leave();
 		});
-        
-    }
+    },
+    voiceConnection: {}
 }

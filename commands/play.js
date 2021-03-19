@@ -4,9 +4,9 @@ const ytsr = require('ytsr');
 
 module.exports = {
     name: 'play',
-    descripition: 'play em video de youtube',
-    async execute(message, args) {
-        var videoUrl = args[0];
+    description: 'play em video de youtube',
+    async execute(message, args,) {
+        let videoUrl = args[0];
 
         const channels = message.guild.channels;
 

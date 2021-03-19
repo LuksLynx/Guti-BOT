@@ -35,8 +35,12 @@ client.on('message', message => {          // onde os comandos ficam
     client.commands.get('clear').execute(message, args);
   } else if (command === 'play') {
     client.commands.get('play').execute(message, args);
+  } else if (command === 'stop') {
+    client.commands.get('stop').execute(message, args);
   } else if (command === 'roll') {
     client.commands.get('roll').execute(message, args);
+  } else if (command === 'boss') {
+    client.commands.get('boss').execute(message, args);
   } else {
     message.channel.send('DIGITA CERTO SEU GORILA')
   }

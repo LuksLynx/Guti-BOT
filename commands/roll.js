@@ -3,7 +3,7 @@ const { random } = require("../utils");
 module.exports = {
     name: 'roll',
     descripition: 'rolar dados inexplicáveis com modificador',
-    async execute(message, args,) {
+    async execute(message, args) {
         let dice = args.join(''); // transforma o argumento de array para string
         const regex = /(\+|-)\s*\d+/g; // regex pra detectar +/- e o numero depois deles
 

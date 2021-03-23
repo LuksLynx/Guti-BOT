@@ -47,41 +47,18 @@ module.exports = {
 
                 return url;
 
-            }).catch(error => console.error(error));
-
-        const channels = message.guild.channels;
-
-        var voiceChannel = [];
-
-        const voiceChannels = channels.cache.filter(canal => canal.type == 'voice');
-
-        voiceChannels.forEach(channel => {
-            channel.members.forEach((member) => {
-                if (member.id == message.author.id)
-                    voiceChannel = channel;
+            }).catch(error => {
+                console.error(error);
+                return false;
             });
-        });
 
-        if (voiceChannel.length <= 0) {
-            return message.reply('Entra em um canal de voz mermão >:/');
-        }
+       
+        if(!bossUrl) return;
 
-        const permissions = voiceChannel.permissionsFor(message.client.user);
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-            return message.channel.send(
-                'Eu não consigo :('
-            );
-        }
+        let voiceChannel = await Play.getVoiceChannel(message);
+        if(!voiceChannel) return;
 
-        if (!ytdl.validateURL(bossUrl)) {
-            return message.channel.send('O vídeo morreu :sob:');
-        }
+        Play.playAudio(bossUrl, voiceChannel);
 
-
-        Play.voiceConnection = await voiceChannel.join();
-        Play.voiceConnection.play(ytdl(bossUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
-            .on("finish", async () => {
-                voiceChannel.leave();
-            });
     }
 }

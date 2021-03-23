@@ -39,7 +39,7 @@ if(len(sys.argv)>1):
 	tags = sys.argv[2]
 
 #F95 Base Url
-url = "https://f95zone.to/search/108120845/?q=*&t=post&c[child_nodes]=1&c[nodes][0]=1&c[tags]="+tags+"&o=relevance"
+url = "https://f95zone.to/search/108120845/?q=*&t=post&c[child_nodes]=1&c[nodes][0]=1&c[tags]="+str(tags)+"&o=relevance"
 
 page = requests.get(url, cookies=token)
 

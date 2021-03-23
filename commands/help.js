@@ -1,9 +1,9 @@
-const { MessageEmbed } = require("discord.js")
+const Discord = require("discord.js")
 
 module.exports = {
     name: 'help',
     description: 'help do bot',
-    execute(message, args, Discord) {
+    async execute(message, args) {
         const newEmbed = new Discord.MessageEmbed()
             .setColor('#0x0099ff')
             .setTitle('COMANDOS DO BOT')

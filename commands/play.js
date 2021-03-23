@@ -6,32 +6,13 @@ module.exports = {
     name: 'play',
     description: 'play em video de youtube',
     async execute(message, args,) {
+
+        if(args[0].length <= 0) return message.channel.send("Digita aí mermão");
+
         let videoUrl = args[0];
 
-        const channels = message.guild.channels;
-
-        var voiceChannel = [];
-
-        const voiceChannels = channels.cache.filter(canal => canal.type == 'voice');
-
-        voiceChannels.forEach(element => {
-            element.members.forEach((member) => {
-                if (member.id == message.author.id)
-                    voiceChannel = element;
-            });
-        });
-
-        if (voiceChannel.length <= 0) {
-            return message.reply('Entra em um canal de voz mermão >:/');
-        }
-
-        const permissions = voiceChannel.permissionsFor(message.client.user);
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-            return message.channel.send(
-                'Eu não consigo :('
-            );
-        }
-
+        let voiceChannel = await this.getVoiceChannel(message);
+        if(!voiceChannel) return;
 
         if (!ytdl.validateURL(videoUrl)) {
             videoUrl = args.join('');
@@ -52,14 +33,64 @@ module.exports = {
 					return trueUrl;
 
                 })
-                .catch(warning => message.channel.send('Demorou demais'))
+                .catch(warning => { 
+                    message.channel.send('Demorou demais')
+                    return false;
+                });
 
         }
-        this.voiceConnection = await voiceChannel.join();
-		this.voiceConnection.play(ytdl(videoUrl, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
+
+        if(!videoUrl) return;
+
+        this.playAudio(videoUrl, voiceChannel);
+
+        
+    },
+    guildConnections: new Map(),
+    async playAudio(url, voiceChannel) {
+
+        let construct = {
+            voiceConnection: null
+        };
+
+        construct.voiceConnection = await voiceChannel.join();
+
+        this.guildConnections.set(voiceChannel.guild.id, construct);
+
+        let guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+        let { voiceConnection } = guildConnection;
+
+        voiceConnection.play(ytdl(url, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
 		.on("finish", async () => {
 			voiceChannel.leave();
 		});
     },
-    voiceConnection: {}
+    async getVoiceChannel (message) {
+        const channels = message.guild.channels;
+        const voiceChannels = channels.cache.filter(canal => canal.type == 'voice');
+
+        var voiceChannel = [];
+        voiceChannels.forEach(element => {
+            element.members.forEach((member) => {
+                if (member.id == message.author.id)
+                    voiceChannel = element;
+            });
+        });
+
+        if (voiceChannel.length <= 0) {
+            message.reply('Entra em um canal de voz mermão >:/');
+            return false;
+        }
+
+        const permissions = voiceChannel.permissionsFor(message.client.user);
+        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
+            message.channel.send(
+                'Eu não consigo :('
+            );
+            return false;
+        }
+
+        return voiceChannel;
+
+    }
 }

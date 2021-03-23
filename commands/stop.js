@@ -6,7 +6,13 @@ module.exports = {
     description: 'da um STOP no video rodando no play',
     execute(message, args) {
 
-        return Play.voiceConnection.dispatcher.end();
-        
+        if(!Play.guildConnections.get(message.guild.id)) return;
+
+        let guildConnection = Play.guildConnections.get(message.guild.id);
+        let { voiceConnection } = guildConnection;
+
+        if(voiceConnection != null)
+            return voiceConnection.dispatcher.end();
+
     }
 }

@@ -4,7 +4,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const utils = require('./utils.js');
 
-const prefix = '%'; //prefixo do bot
+const prefix = process.env.BOT_PREFIX;
 const client = new Discord.Client();
 
 client.commands = new Discord.Collection();
@@ -23,11 +23,15 @@ client.on('message', async (message) => {
 
   /* Passiva do Guti */
 
-  let mensagens = ['Eu sou Guti', 'Guti?', 'Gay', 'Anthonny?'];
+  let mensagens = ['EU SOU O VERDADEIRO GUTI PORRA','VAI GANHA TATUAGEM DE SEREIA','MÃO NA CABEÇA','SAI DAQUI IMPOSTOR DE BOSTA','HEITOR FAZ ALGUMA COISA TIRA ESSE IMPOSTOR DO SERVIDOR','HEITOR PORRA, FAZ ALGUMA COISA... MOSTRA QUEM MANDA NESSA PORRA'];
   let random = await utils.random(0, mensagens.length);
+  let chamaGuti = await utils.random(1, 100);
+  
 
   if (message.content.includes('<@!231632637045768192>')) {
-    message.channel.send(mensagens[random]);
+    if (chamaGuti <= 10) {
+      message.channel.send(mensagens[random]);
+    }
   }
 
   /* Fim da passiva */
@@ -37,8 +41,8 @@ client.on('message', async (message) => {
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
 
-  if(client.commands.get(command) != undefined) {
-      client.commands.get(command).execute(message, args);
+  if (client.commands.get(command) != undefined) {
+    client.commands.get(command).execute(message, args);
   } else {
     message.channel.send('DIGITA CERTO SEU GORILA');
   }

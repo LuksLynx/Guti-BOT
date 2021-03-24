@@ -15,7 +15,7 @@ for (const file of commandFiles) {
 }
 
 client.on('ready', () => {
-  client.user.setActivity('no porão de testes...');
+  client.user.setActivity('com o silvinha | %help');
   console.log(`Logged in as ${client.user.tag}!`);
 });
 

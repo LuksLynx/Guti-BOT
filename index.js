@@ -4,7 +4,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const utils = require('./utils.js');
 
-const prefix = '%'; //prefixo do bot
+const prefix = process.env.BOT_PREFIX;
 const client = new Discord.Client();
 
 client.commands = new Discord.Collection();

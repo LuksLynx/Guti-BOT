@@ -4,18 +4,81 @@ module.exports = {
     name: 'help',
     description: 'help do bot',
     async execute(message, args) {
-        const newEmbed = new Discord.MessageEmbed()
-            .setColor('#0x0099ff')
-            .setTitle('COMANDOS DO BOT')
-            .setDescription('Under Construction')
-            .addFields(
-                { name: 'Regra 1', value: 'Qualquer tipo de preconceito será punido com banimento' },
-                { name: 'Regra 2', value: 'Sem macaquices nos canais de voz' },
-                { name: 'Regra 3', value: 'Sem anime e coisa de weeb nos canais de texto, sujeito a banimento' },
-            )
-            .setImage('https://cdn.discordapp.com/attachments/426590652244164609/817549431225581598/tumblr_oof4yaMpvb1vy2tgqo1_400.png')
-            .setFooter('Não se esqueça das regras!')
 
-        message.channel.send(newEmbed);
+		let botPrefix = process.env.BOT_PREFIX;
+		
+		let commands = {
+			audioCommands : ['play', 'stop', 'boss'],
+			utilityCommands : ['roll', 'clear'],
+			nsfwCommands : ['f95']
+		};
+
+		let commandsDescription = {
+			play : {
+				description : 'Toca um video do youtube',
+				usage : 'play` <vídeo>',
+				params: '`vídeo` aqui deve ser utilizado o link do video, caso não seja um link ele irá pesquisar 5 opções de nomes parecidos no youtube para você escolher.'
+			},
+			stop : {
+				description : 'Encerra qualquer comando de áudio que esteja em execução.',
+				usage : 'stop`',
+			},
+			boss : {
+				description : 'Toca o tema de um boss disponível a sua escolha.',
+				usage : 'boss`\n<número do boss>',
+				params: '`número do boss` deve ser digitado logo após a mensagem que contem os números dos bosses.'
+			},
+			roll : {
+				description : 'Rola um dado de 2 até 1000 com um modificador que pode ir até 1000.',
+				usage : 'roll` <dado><+ ou -><modificador>',
+				params: '`dado` escolha um dado de 2 até 1000.\n`+ ou -` escolha se quer somar ou subtrair o modificador.\n`modificador` escolha um modificador de 1 a 1000.'
+			},
+			clear : {
+				description : 'Deleta de 1 a 20 das mensagens mais recentes, tem um tempo de espera de 10 segundos para usar novamente.',
+				usage : 'clear` <número>',
+				params: '`número` é o número de mensagens que deseja deletar, sendo o máximo 20.'
+			},
+			f95 : {
+				description : 'Sorteia um jogo do fórum F95zone utilizando ou não tags',
+				usage : 'f95` <tag1> <tag2>...<tagN>',
+				params: '`tag` podem ser utilizadas inúmeras tags para sortear um jogo que contenha elas, caso não seja passada tag alguma, será sorteado um jogo da aba de updates mais recentes.'
+			},
+		};
+
+		var newEmbed;
+
+        if(args == ''){
+			
+			newEmbed = new Discord.MessageEmbed()
+				.setColor('#9400D3')
+				.setTitle('COMANDOS DO GUTÃO')
+				.addFields(
+					{ name: ':headphones: COMANDOS DE AUDIO', value: commands.audioCommands.map(item =>  `\`${botPrefix}${item}\``).join(" ") },
+					{ name: ':crossed_swords: COMANDOS DE UTILIDADE', value: commands.utilityCommands.map(item =>  `\`${botPrefix}${item}\``).join(" ") },
+					{ name: ':underage: COMANDOS NSFW', value: commands.nsfwCommands.map(item =>  `\`${botPrefix}${item}\``).join(" ") },
+				)
+				.setThumbnail('https://cdn.discordapp.com/attachments/426590652244164609/817549431225581598/tumblr_oof4yaMpvb1vy2tgqo1_400.png')
+				.setFooter(`Digite "${botPrefix}help <comando>" para mais detalhes`);
+
+        } else {
+
+			let selectedCommand = commandsDescription[args];
+
+			newEmbed = new Discord.MessageEmbed()
+            .setColor('#9400D3')
+            .setTitle(`COMANDO ${botPrefix}${args}`)
+            .addFields(
+                { name: ':mag:DESCRIÇÃO:', value: selectedCommand.description },
+                { name: ':question:COMO USAR:', value: `\`${botPrefix}` + selectedCommand.usage },
+            )
+            .setThumbnail('https://cdn.discordapp.com/attachments/426590652244164609/817549431225581598/tumblr_oof4yaMpvb1vy2tgqo1_400.png');
+			
+			if(selectedCommand.params)
+				newEmbed.addField(':gear:PARAMETRO(s) DO COMANDO:', selectedCommand.params);
+
+		}
+
+		message.channel.send(newEmbed);
+
     }
 }

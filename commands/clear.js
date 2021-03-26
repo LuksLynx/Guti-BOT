@@ -10,7 +10,7 @@ module.exports = {
                 if (!args[0]) return message.reply('Esqueceu do número de mensagens :/'); //verifica se tem numero de mensagens
                 if (isNaN(args[0])) return message.reply('Só funciona com números né >:('); // verifica se o args é um numero
 
-                if (args[0] > 20) return message.reply('O máximo é 10 :>');
+                if (args[0] > 20) return message.reply('O máximo é 20 :>');
                 if (args[0] < 1) return message.reply('O Mínimo é 1 :<');
 
                 await message.channel.messages.fetch({ limit: args[0] }).then(messages => { // deleta a mensagem
@@ -18,9 +18,9 @@ module.exports = {
 
                     talkedRecently.add(message.author.id); // adiciona o usuário no cooldown
                     setTimeout(() => {
-                        // remove o cooldown depois de 30 segundos
+                        // remove o cooldown depois de 10 segundos
                         talkedRecently.delete(message.author.id);
-                    }, 30000);
+                    }, 10000);
                 })
             }
         } else {

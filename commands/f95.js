@@ -5,6 +5,10 @@ module.exports = {
     description: 'this is a ping command',
     async execute(message, args,) {
 
+        if(message.channel.nsfw === false){
+            return message.channel.send('Aqui não pode putaria!');
+        }
+
         let tags = '';
         
         const split = message.content.split(" "); split.shift();

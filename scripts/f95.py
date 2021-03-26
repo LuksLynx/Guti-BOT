@@ -1,9 +1,10 @@
 import requests, sys, random, json, os
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from dotenv import load_dotenv
 
 headers = {
-	'User-Agent':'MMozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15',
+	'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15',
 	'Connection':'keep-alive'
 }
 
@@ -108,7 +109,7 @@ def withoutTags():
 	options.headless = True
 
 	# Roda o firefox em modo headless
-	geckoDir = str(currentDir)+r'\scripts\geckodriver.exe'
+	geckoDir = str(currentDir)+'/scripts/' + os.getenv("GECKODRIVER")
 	browser = webdriver.Firefox(options=options, executable_path=geckoDir)
 
 	# Entra na página

@@ -10,7 +10,7 @@ module.exports = {
 		let commands = {
 			audioCommands : ['play', 'stop', 'boss'],
 			utilityCommands : ['roll', 'clear'],
-			nsfwCommands : ['f95']
+			nsfwCommands : ['f95','nhentai']
 		};
 
 		let commandsDescription = {
@@ -42,6 +42,11 @@ module.exports = {
 				description : 'Sorteia um jogo do fórum F95zone utilizando ou não tags',
 				usage : 'f95` <tag1> <tag2>...<tagN>',
 				params: '`tag` podem ser utilizadas inúmeras tags para sortear um jogo que contenha elas, caso não seja passada tag alguma, será sorteado um jogo da aba de updates mais recentes.'
+			},
+			nhentai : {
+				description : 'Sorteia um doujin da página de lançamentos recentes ou um doujin aleatório do site.',
+				usage : 'nhentai` [random]',
+				params : '`random` caso seja digitado irá sair um doujin aleatório, caso contrário ele virá da página de lançamentos recentes.'
 			},
 		};
 

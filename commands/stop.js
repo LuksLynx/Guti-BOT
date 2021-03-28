@@ -11,6 +11,8 @@ module.exports = {
         let guildConnection = Play.guildConnections.get(message.guild.id);
         let { voiceConnection } = guildConnection;
 
+        guildConnection.songs.length = 0;
+
         if(voiceConnection != null)
             return voiceConnection.dispatcher.end();
 

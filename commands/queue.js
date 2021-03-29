@@ -1,4 +1,3 @@
-const { guildConnections } = require("./play.js");
 const Discord = require('discord.js');
 const ytdl = require('discord-ytdl-core');
 const Play = require("./play.js");

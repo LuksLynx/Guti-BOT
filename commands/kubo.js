@@ -1,5 +1,4 @@
 const ytdl = require('discord-ytdl-core');
-const { getVoiceChannel } = require('./play.js');
 const Play = require("./play.js");
 
 module.exports = {

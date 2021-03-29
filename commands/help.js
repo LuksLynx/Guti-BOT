@@ -8,7 +8,7 @@ module.exports = {
 		let botPrefix = process.env.BOT_PREFIX;
 		
 		let commands = {
-			audioCommands : ['play', 'stop', 'boss'],
+			audioCommands : ['play', 'stop', 'boss','skip','queue','kubo'],
 			utilityCommands : ['roll', 'clear'],
 			nsfwCommands : ['f95','nhentai']
 		};
@@ -48,6 +48,18 @@ module.exports = {
 				usage : 'nhentai` [random]',
 				params : '`random` caso seja digitado irá sair um doujin aleatório, caso contrário ele virá da página de lançamentos recentes.'
 			},
+			skip : {
+				description : 'Pula o item atual da fila.',
+				usage : 'skip`'
+			},
+			queue : {
+				description : 'Mostra a fila de músicas do Gutão',
+				usage : 'queue`'
+			},
+			kubo : {
+				description : 'O KUBO TA MALUCO!!!!!',
+				usage : 'kubo`'
+			}
 		};
 
 		var newEmbed;

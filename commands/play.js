@@ -42,16 +42,12 @@ module.exports = {
 
         if(!videoUrl) return;
         
-        var construct = {
-            voiceConnection: null,
-            songs: []
-        };
-
         let guildConnection = this.guildConnections.get(message.guild.id);
        
         if(!guildConnection) {
-            construct.songs.push(videoUrl);
-            this.guildConnections.set(message.guild.id, construct);
+            this.guildConnections.set(message.guild.id, this.guildConnectionConstruct);
+            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+            guildConnection.songs.push(videoUrl);
         } else {
             if(guildConnection.songs.length > 0) {
                 guildConnection.songs.push(videoUrl);
@@ -62,10 +58,20 @@ module.exports = {
         this.playAudio(videoUrl, voiceChannel);
 
     },
+    guildConnectionConstruct: {
+        voiceConnection: null,
+        songs: []
+    },
     guildConnections: new Map(),
     async playAudio(url, voiceChannel) {
         
         var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+
+        if(!guildConnection) {
+            this.guildConnections.set(voiceChannel.guild.id, this.guildConnectionConstruct);
+            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+            guildConnection.songs.push(url);
+        }
 
         if(!url) {
             guildConnection.voiceConnection.channel.leave();

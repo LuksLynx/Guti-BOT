@@ -1,4 +1,3 @@
-const { VoiceConnection } = require("discord.js");
 const Play = require("./play.js");
 
 module.exports = {

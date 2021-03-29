@@ -41,28 +41,49 @@ module.exports = {
         }
 
         if(!videoUrl) return;
+        
+        let guildConnection = this.guildConnections.get(message.guild.id);
+       
+        if(!guildConnection) {
+            this.guildConnections.set(message.guild.id, this.guildConnectionConstruct);
+            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+            guildConnection.songs.push(videoUrl);
+        } else {
+            if(guildConnection.songs.length > 0) {
+                guildConnection.songs.push(videoUrl);
+                return message.channel.send("Adicionado na fila.");
+            }
+        }
 
         this.playAudio(videoUrl, voiceChannel);
 
-        
+    },
+    guildConnectionConstruct: {
+        voiceConnection: null,
+        songs: []
     },
     guildConnections: new Map(),
     async playAudio(url, voiceChannel) {
+        
+        var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
 
-        let construct = {
-            voiceConnection: null
-        };
+        if(!guildConnection) {
+            this.guildConnections.set(voiceChannel.guild.id, this.guildConnectionConstruct);
+            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+            guildConnection.songs.push(url);
+        }
 
-        construct.voiceConnection = await voiceChannel.join();
+        if(!url) {
+            guildConnection.voiceConnection.channel.leave();
+            this.guildConnections.delete(voiceChannel.guild.id);
+            return;
+        }
 
-        this.guildConnections.set(voiceChannel.guild.id, construct);
-
-        let guildConnection = this.guildConnections.get(voiceChannel.guild.id);
-        let { voiceConnection } = guildConnection;
-
-        voiceConnection.play(ytdl(url, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
+        guildConnection.voiceConnection = await voiceChannel.join();
+        guildConnection.voiceConnection.play(ytdl(url, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
 		.on("finish", async () => {
-			voiceChannel.leave();
+            guildConnection.songs.shift();
+            this.playAudio(guildConnection.songs[0], voiceChannel);
 		});
     },
     async getVoiceChannel (message) {

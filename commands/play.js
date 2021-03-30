@@ -1,7 +1,7 @@
 const Discord = require("discord.js")
 const ytdl = require('discord-ytdl-core');
 const ytsr = require('ytsr');
-var ytpl = require('ytpl');
+const ytpl = require('ytpl');
 
 module.exports = {
     name: 'play',

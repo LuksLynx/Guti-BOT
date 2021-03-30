@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const ytdl = require('discord-ytdl-core');
 const ytsr = require('ytsr');
+var ytpl = require('ytpl');
 
 module.exports = {
     name: 'play',
@@ -14,9 +15,11 @@ module.exports = {
         let voiceChannel = await this.getVoiceChannel(message);
         if(!voiceChannel) return;
 
-        if (!ytdl.validateURL(videoUrl)) {
+        if (!ytdl.validateURL(videoUrl) && !ytpl.validateID(videoUrl)) {
             videoUrl = args.join('');
-            let searchResult = await ytsr(videoUrl, { limit: 5 });
+            const filters1 = await ytsr.getFilters(videoUrl);
+            const filterVideo = filters1.get('Type').get('Video'); //filtra as possiveis playlists que teriam na lista
+            let searchResult = await ytsr(filterVideo.url, { limit: 5 });
             const newEmbed = new Discord.MessageEmbed()
                 .setColor('#0x0099ff')
                 .setTitle('Escolhe um ai')
@@ -42,6 +45,11 @@ module.exports = {
 
         if(!videoUrl) return;
         
+        if(ytpl.validateID(videoUrl)){ // valida se um link é de uma playlist
+            this.playList(videoUrl,voiceChannel, message.channel);
+            return message.channel.send('E A PLAYLIST COMEÇO CAMBADA');
+        }
+
         let guildConnection = this.guildConnections.get(message.guild.id);
        
         if(!guildConnection) {
@@ -112,6 +120,21 @@ module.exports = {
         }
 
         return voiceChannel;
+
+    },
+    async playList(url,voiceChannel, textChannel) {
+
+        let { items : playlistVideos } = await ytpl(url);
+        var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+
+        if(!guildConnection) {
+            await this.playAudio(playlistVideos[0].shortUrl, voiceChannel);
+            playlistVideos.shift();
+            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+        }
+
+        playlistVideos.forEach(video => guildConnection.songs.push(video.shortUrl));
+        textChannel.send(`${playlistVideos.length} vídeos foram adicionados na fila.`);
 
     }
 }

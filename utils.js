@@ -10,3 +10,9 @@ exports.formatTextLimitCharacters = async (text, length=2043) => {
 	text = text.substring(0, last);
 	return text + "...";
 }
+exports.badWordsDetector = (content) => {
+	const badWords = ['cp', 'child', 'loli', 'lolicon', 'lolita', 'shotacon', 'shota', 'kid', 'kiddo', 'kids', 'lolis', 'kiddy', 'children', 'baby', 'babies', 'jb', 'jailbait', 'lollipop', 'cub', 'toddlercon', 'toddler'];
+	if(badWords.some(badWord => content.includes(badWord))){
+		return true;
+	}
+}

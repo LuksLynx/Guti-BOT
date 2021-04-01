@@ -1,4 +1,5 @@
 const { PythonShell } = require('python-shell');
+const utils = require('../utils.js');
 
 module.exports = {
     name: 'nhentai',
@@ -7,6 +8,10 @@ module.exports = {
 
         if (message.channel.nsfw === false) {
             return message.channel.send('Aqui não pode putaria!');
+        }
+
+        if(utils.badWordsDetector(message.content)){
+            return message.channel.send('Essa tag não pode em :face_with_symbols_over_mouth:');
         }
 
         let rand = '';

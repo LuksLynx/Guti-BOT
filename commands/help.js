@@ -10,7 +10,7 @@ module.exports = {
 		let commands = {
 			audioCommands : ['play', 'stop', 'boss','skip','queue','kubo'],
 			utilityCommands : ['roll', 'clear'],
-			nsfwCommands : ['f95','nhentai']
+			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
 		let commandsDescription = {
@@ -59,6 +59,11 @@ module.exports = {
 			kubo : {
 				description : 'O KUBO TA MALUCO!!!!!',
 				usage : 'kubo`'
+			},
+			rule34 : {
+				description : 'Aplica a regra mais famosa da internet, use com cuidado.',
+				usage : 'rule34` <tag1> <tag2>...<tagN>',
+				params : '`rule34` podem ser usadas inumeras tags, caso a tag contenha duas palavras, elas devem estar separadas por uma underline, se nenhuma tag for atribuida ele irá sortear algo da página inicial.'
 			}
 		};
 

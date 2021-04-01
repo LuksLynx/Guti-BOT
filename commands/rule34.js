@@ -11,6 +11,10 @@ module.exports = {
             return message.channel.send('Aqui não pode putaria!');
         }
         
+        if(utils.badWordsDetector(message.content)){
+            return message.channel.send('Essa tag não pode em :face_with_symbols_over_mouth:');
+        }
+
         let tags = args.join(" ").trim().substr(args.indexOf(' ') + 1).replace(' ', '+');
 
         let processMessage = await message.channel.send('Processando...');
@@ -24,18 +28,23 @@ module.exports = {
             return message.channel.send("Deu ruim, o servidor está a mimir...");
         });
 
+        return this.getPic(request,processMessage);
+    },
+    async getPic(request,proMessage) {
         let xmlParser = new xml2js.Parser();
 
         xmlParser.parseStringPromise(request).then(async (result) => {
             let list = result.posts.post;
             let ranPic = await utils.random(0,list.length);
             let chosenPic = list[ranPic];
+            if(chosenPic.$.has_children == true){
+                this.getPic(request,proMessage);
+            }
             let picUrl = chosenPic.$.file_url;
-            return processMessage.edit("``Rule34``\n"+picUrl);
+            return proMessage.edit("``Rule34``\n"+picUrl);
         }).catch(err => {
             console.error(err);
             return message.channel.send("Deu ruim.");
-        });
-
+        })
     }
 }

@@ -16,7 +16,7 @@ module.exports = {
         if(!voiceChannel) return;
 
         if (!ytdl.validateURL(videoUrl) && !ytpl.validateID(videoUrl)) {
-            videoUrl = args.join('');
+            videoUrl = args.join(' ');
             const filters1 = await ytsr.getFilters(videoUrl);
             const filterVideo = filters1.get('Type').get('Video'); //filtra as possiveis playlists que teriam na lista
             let searchResult = await ytsr(filterVideo.url, { limit: 5 });

@@ -10,7 +10,7 @@ module.exports = {
         let image = [];
 		let guildId = message.guild.id;
 
-        Array.from(latestMessages).forEach(message => {
+        Array.from(latestMessages).reverse().forEach(message => {
             if (message[1].embeds.length > 0 || message[1].attachments.size > 0) {
                 (message[1].embeds.length > 0) ? image = message[1].embeds : image = message[1].attachments;
                 return true;

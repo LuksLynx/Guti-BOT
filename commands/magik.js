@@ -6,7 +6,7 @@ module.exports = {
     description: 'magik comando sim',
     async execute(message, args,) {
 
-        let latestMessages = await message.channel.messages.fetch({ limit: 5 });
+        let latestMessages = await message.channel.messages.fetch({ limit: 15 });
         let image = [];
 		let guildId = message.guild.id;
 

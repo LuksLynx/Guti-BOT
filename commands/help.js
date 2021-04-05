@@ -8,8 +8,8 @@ module.exports = {
 		let botPrefix = process.env.BOT_PREFIX;
 		
 		let commands = {
-			audioCommands : ['play', 'stop', 'boss','skip','queue','kubo'],
-			utilityCommands : ['roll', 'clear','magik','concha'],
+			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo'],
+			utilityCommands : ['roll','clear','magik','concha'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -73,6 +73,14 @@ module.exports = {
 				description : 'Faça uma pergunta à lendária Concha Mágica.',
 				usage : 'concha` <pergunta>',
 				params : '`pergunta` apenas faça uma pergunta.'
+			},
+			pause : {
+				description : 'Pausa o que estiver sendo tocado pelo bot.',
+				usage : 'pause`'
+			},
+			resume : {
+				description : 'Volta a tocar o que foi pausado.',
+				usage : 'resume`'
 			}
 		};
 

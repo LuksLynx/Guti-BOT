@@ -8,12 +8,12 @@ module.exports = {
     description: 'play em video de youtube',
     async execute(message, args,) {
 
-        if(args[0].length <= 0) return message.channel.send("Digita aí mermão");
+        if (args[0].length <= 0) return message.channel.send("Digita aí mermão");
 
         let videoUrl = args[0];
 
         let voiceChannel = await this.getVoiceChannel(message);
-        if(!voiceChannel) return;
+        if (!voiceChannel) return;
 
         if (!ytdl.validateURL(videoUrl) && !ytpl.validateID(videoUrl)) {
             videoUrl = args.join(' ');
@@ -30,34 +30,34 @@ module.exports = {
             videoUrl = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
                 .then(result => {
 
-                    let chosen = searchResult.items[result.first().content-1];
+                    let chosen = searchResult.items[result.first().content - 1];
                     let trueUrl = chosen.url;
 
-					return trueUrl;
+                    return trueUrl;
 
                 })
-                .catch(warning => { 
+                .catch(warning => {
                     message.channel.send('Demorou demais')
                     return false;
                 });
 
         }
 
-        if(!videoUrl) return;
-        
-        if(ytpl.validateID(videoUrl)){ // valida se um link é de uma playlist
-            this.playList(videoUrl,voiceChannel, message.channel);
+        if (!videoUrl) return;
+
+        if (ytpl.validateID(videoUrl)) { // valida se um link é de uma playlist
+            this.playList(videoUrl, voiceChannel, message.channel);
             return message.channel.send('E A PLAYLIST COMEÇO CAMBADA');
         }
 
         let guildConnection = this.guildConnections.get(message.guild.id);
-       
-        if(!guildConnection) {
+
+        if (!guildConnection) {
             this.guildConnections.set(message.guild.id, this.guildConnectionConstruct);
             guildConnection = this.guildConnections.get(voiceChannel.guild.id);
             guildConnection.songs.push(videoUrl);
         } else {
-            if(guildConnection.songs.length > 0) {
+            if (guildConnection.songs.length > 0) {
                 guildConnection.songs.push(videoUrl);
                 return message.channel.send("Adicionado na fila.");
             }
@@ -70,31 +70,35 @@ module.exports = {
         voiceConnection: null,
         songs: []
     },
+    guildTimeout: [],
     guildConnections: new Map(),
     async playAudio(url, voiceChannel) {
-        
-        var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
 
-        if(!guildConnection) {
-            this.guildConnections.set(voiceChannel.guild.id, this.guildConnectionConstruct);
-            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
+        var guildId = voiceChannel.guild.id;
+        var guildConnection = this.guildConnections.get(guildId);
+
+        if (!guildConnection) {
+            this.guildConnections.set(guildId, this.guildConnectionConstruct);
+            guildConnection = this.guildConnections.get(guildId);
             guildConnection.songs.push(url);
         }
 
-        if(!url) {
-            guildConnection.voiceConnection.channel.leave();
-            this.guildConnections.delete(voiceChannel.guild.id);
+        if (!url) {
+            this.guildTimeout[guildId] = setTimeout(() => {
+                this.guildTimeout[guildId] = null;
+                guildConnection.voiceConnection.channel.leave();
+            }, 60000);
             return;
-        }
+        } else { clearTimeout(this.guildTimeout[guildId]); }
 
         guildConnection.voiceConnection = await voiceChannel.join();
         guildConnection.voiceConnection.play(ytdl(url, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
-		.on("finish", async () => {
-            guildConnection.songs.shift();
-            this.playAudio(guildConnection.songs[0], voiceChannel);
-		});
+            .on("finish", async () => {
+                guildConnection.songs.shift();
+                this.playAudio(guildConnection.songs[0], voiceChannel);
+            });
     },
-    async getVoiceChannel (message) {
+    async getVoiceChannel(message) {
         const channels = message.guild.channels;
         const voiceChannels = channels.cache.filter(canal => canal.type == 'voice');
 
@@ -122,12 +126,12 @@ module.exports = {
         return voiceChannel;
 
     },
-    async playList(url,voiceChannel, textChannel) {
+    async playList(url, voiceChannel, textChannel) {
 
-        let { items : playlistVideos } = await ytpl(url);
+        let { items: playlistVideos } = await ytpl(url);
         var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
 
-        if(!guildConnection) {
+        if (!guildConnection) {
             await this.playAudio(playlistVideos[0].shortUrl, voiceChannel);
             playlistVideos.shift();
             guildConnection = this.guildConnections.get(voiceChannel.guild.id);

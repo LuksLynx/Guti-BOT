@@ -1,4 +1,5 @@
 require('dotenv').config();
+const database = require('./database.js');
 
 const fs = require('fs');
 const Discord = require('discord.js');
@@ -13,7 +14,16 @@ for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.name, command);
 }
+  /*DATABASE*/
+client.on('guildCreate', async guild => {
+    await database.query(`INSERT INTO GGuild (GGGuildID, GGname) VALUES (${guild.id}, '${guild.name}')`);
+});
 
+client.on('guildDelete', async guild => {
+    const dbId = await database.query(`SELECT GGuildID FROM GGuild WHERE GGGuildID = ${guild.id}`);
+    await database.query(`DELETE FROM GGuild WHERE GGuildID = ${dbId.GGuildID}`);
+});
+  /*DATABASE END*/
 client.on('ready', () => {
   client.user.setActivity('com o silvinha | %help');
   console.log(`Logged in as ${client.user.tag}!`);

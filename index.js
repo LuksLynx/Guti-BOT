@@ -1,11 +1,11 @@
 require('dotenv').config();
 const database = require('./database.js');
+exports.database = database;
 
 const fs = require('fs');
 const Discord = require('discord.js');
 const utils = require('./utils.js');
 
-const prefix = process.env.BOT_PREFIX;
 const client = new Discord.Client();
 
 client.commands = new Discord.Collection();
@@ -14,16 +14,18 @@ for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.name, command);
 }
-  /*DATABASE*/
+
+/*DATABASE*/
 client.on('guildCreate', async guild => {
-    await database.query(`INSERT INTO GGuild (GGGuildID, GGname) VALUES (${guild.id}, '${guild.name}')`);
+  await database.query(`INSERT INTO GGuild (GGGuildID, GGname) VALUES (${guild.id}, '${guild.name}')`);
 });
 
 client.on('guildDelete', async guild => {
-    const dbId = await database.query(`SELECT GGuildID FROM GGuild WHERE GGGuildID = ${guild.id}`);
-    await database.query(`DELETE FROM GGuild WHERE GGuildID = ${dbId.GGuildID}`);
+  const dbId = await database.query(`SELECT GGuildID FROM GGuild WHERE GGGuildID = ${guild.id}`);
+  await database.query(`DELETE FROM GGuild WHERE GGuildID = ${dbId.GGuildID}`);
 });
-  /*DATABASE END*/
+/*DATABASE END*/
+
 client.on('ready', () => {
   client.user.setActivity('com o silvinha | %help');
   console.log(`Logged in as ${client.user.tag}!`);
@@ -33,10 +35,10 @@ client.on('message', async (message) => {
 
   /* Passiva do Guti */
 
-  let mensagens = ['EU SOU O VERDADEIRO GUTI PORRA','VAI GANHA TATUAGEM DE SEREIA','MÃO NA CABEÇA','SAI DAQUI IMPOSTOR DE BOSTA','HEITOR FAZ ALGUMA COISA TIRA ESSE IMPOSTOR DO SERVIDOR','HEITOR PORRA, FAZ ALGUMA COISA... MOSTRA QUEM MANDA NESSA PORRA'];
+  let mensagens = ['EU SOU O VERDADEIRO GUTI PORRA', 'VAI GANHA TATUAGEM DE SEREIA', 'MÃO NA CABEÇA', 'SAI DAQUI IMPOSTOR DE BOSTA', 'HEITOR FAZ ALGUMA COISA TIRA ESSE IMPOSTOR DO SERVIDOR', 'HEITOR PORRA, FAZ ALGUMA COISA... MOSTRA QUEM MANDA NESSA PORRA'];
   let random = await utils.random(0, mensagens.length);
   let chamaGuti = await utils.random(1, 100);
-  
+
 
   if (message.content.includes('<@!231632637045768192>')) {
     if (chamaGuti <= 10) {
@@ -45,6 +47,10 @@ client.on('message', async (message) => {
   }
 
   /* Fim da passiva */
+
+  var prefix = await database.query(`SELECT GGPrefix FROM GGuild WHERE GGGuildID = ${message.guild.id}`);
+  prefix = prefix.GGPrefix;
+  console.log(prefix);
 
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 

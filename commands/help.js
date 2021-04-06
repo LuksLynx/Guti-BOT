@@ -1,12 +1,14 @@
 const Discord = require("discord.js")
+const {database} = require ('../index.js');
 
 module.exports = {
     name: 'help',
     description: 'help do bot',
     async execute(message, args) {
 
-		let botPrefix = process.env.BOT_PREFIX;
-		
+		let botPrefix = await database.query(`SELECT GGPrefix FROM GGuild WHERE GGGuildID = ${message.guild.id}`);
+		botPrefix = botPrefix.GGPrefix;
+
 		let commands = {
 			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo'],
 			utilityCommands : ['roll','clear','magik','concha'],

@@ -1,15 +1,17 @@
 const Discord = require("discord.js")
+const {database} = require ('../index.js');
 
 module.exports = {
     name: 'help',
     description: 'help do bot',
     async execute(message, args) {
 
-		let botPrefix = process.env.BOT_PREFIX;
-		
+		let botPrefix = await database.query(`SELECT GGPrefix FROM GGuild WHERE GGGuildID = ${message.guild.id}`);
+		botPrefix = botPrefix.GGPrefix;
+
 		let commands = {
 			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo'],
-			utilityCommands : ['roll','clear','magik','concha'],
+			utilityCommands : ['roll','clear','magik','concha','prefix'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -81,6 +83,11 @@ module.exports = {
 			resume : {
 				description : 'Volta a tocar o que foi pausado.',
 				usage : 'resume`'
+			},
+			prefix : {
+				description : 'Muda o prefixo do bot para esse servidor.',
+				usage : 'prefix` <prefixo_novo>',
+				params : '`prefixo_novo` é o prefixo que deseja atribuir ao bot no seu servidor, ele pode ter no máximo 3 caracteres, se um prefixo novo não for passado ele irá apenas mostrar o prefixo atual do servidor.'
 			}
 		};
 
@@ -101,6 +108,8 @@ module.exports = {
 
         } else {
 
+			if(!commandsDescription[args]) return message.channel.send("Esse comando não existe");
+			
 			let selectedCommand = commandsDescription[args];
 
 			newEmbed = new Discord.MessageEmbed()

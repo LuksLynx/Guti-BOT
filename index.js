@@ -27,7 +27,7 @@ client.on('guildDelete', async guild => {
 /*DATABASE END*/
 
 client.on('ready', () => {
-  client.user.setActivity('com o silvinha | %help');
+  client.user.setActivity('%help | gutiprefix');
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
@@ -50,7 +50,8 @@ client.on('message', async (message) => {
 
   var prefix = await database.query(`SELECT GGPrefix FROM GGuild WHERE GGGuildID = ${message.guild.id}`);
   prefix = prefix.GGPrefix;
-  console.log(prefix);
+
+  if(message.content == 'gutiprefix') return message.channel.send(`O prefixo do Guti é ${prefix}`); 
 
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 

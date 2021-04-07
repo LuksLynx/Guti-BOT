@@ -1,5 +1,5 @@
 const mysql = require ("mysql");
-const connection = mysql.createConnection({host:'localhost',user:'root',password:'Violeta60895',database:'gutiDB'});
+const connection = mysql.createConnection({host:'localhost',user:'root',password:'Violeta60895',database:'GutiDB'});
 
 connection.connect( error => {
     if(error) return console.error(error);

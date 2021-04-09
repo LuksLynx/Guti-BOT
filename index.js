@@ -17,12 +17,18 @@ for (const file of commandFiles) {
 
 /*DATABASE*/
 client.on('guildCreate', async guild => {
-  await database.query(`INSERT INTO GGuild (GGGuildID, GGname) VALUES (${guild.id}, '${guild.name}')`);
+  const guildId = await database.query(`SELECT GGuildID FROM GGuild WHERE GGGuildID = ${guild.id}`);
+  if(!guildId){
+    await database.query(`INSERT INTO GGuild (GGGuildID, GGname) VALUES (${guild.id}, '${guild.name}')`);
+  } else {
+    await database.query(`UPDATE GGuild SET GGStatus = 1 WHERE GGuildID = ${guildId.GGuildID}`);
+  }
+  
 });
 
 client.on('guildDelete', async guild => {
   const dbId = await database.query(`SELECT GGuildID FROM GGuild WHERE GGGuildID = ${guild.id}`);
-  await database.query(`DELETE FROM GGuild WHERE GGuildID = ${dbId.GGuildID}`);
+  await database.query(`UPDATE GGuild SET GGStatus = 0 WHERE GGuildID = ${dbId.GGuildID}`);
 });
 /*DATABASE END*/
 

@@ -11,10 +11,10 @@ connection.connect( error => {
     console.log('MySQL OK');
 } );
 
-exports.query = async (query) => {
+exports.query = async (query, custom=false) => {
     return new Promise((resolve, reject) => {
         connection.query(query, (err, result) => {
-            return err ? reject(err) : resolve(result[0]);
+            return err ? reject(err) : resolve(custom ? result : result[0]);
         });
     });
 };

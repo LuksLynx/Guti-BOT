@@ -12,16 +12,16 @@ module.exports = {
         if(args[0] == 'add'){
             
             let insertTitleID;
-            let titleExists = await database.query(`SELECT GTitleID FROM GGuildTitle WHERE LOWER(GTtitle) = '${title}'`);
+            let titleExists = await database.query(`SELECT GGTitleID FROM GGTitle WHERE LOWER(GGTTitle) = '${title}' AND GGGuildID = ${guildId}`);
 
             if(!titleExists) {
-                let query = await database.query(`INSERT INTO GGuildtitle (GTguildID, GTtitle) VALUES (${guildId}, '${title}')`, true);
+                let query = await database.query(`INSERT INTO GGTitle (GGGuildID, GGTTitle) VALUES (${guildId}, '${title}')`, true);
                 insertTitleID = query.insertId;
             } else {
-                insertTitleID = titleExists.GTitleID
+                insertTitleID = titleExists.GGTitleID
             }
             
-            await database.query(`INSERT INTO GTitleUser (GTguildID, GTuserID, GTtitleID) VALUES (${guildId}, ${memberId}, ${insertTitleID})`);
+            await database.query(`INSERT INTO GGTitleUser (GGGuildID, GGTUUserID, GGTitleID) VALUES (${guildId}, ${memberId}, ${insertTitleID})`);
         }
 
 

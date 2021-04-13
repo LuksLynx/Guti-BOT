@@ -11,7 +11,7 @@ module.exports = {
 
 		let commands = {
 			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu'],
-			utilityCommands : ['roll','clear','magik','concha','prefix'],
+			utilityCommands : ['roll','clear','magik','concha','prefix','title'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -92,6 +92,11 @@ module.exports = {
 			sefudeu : {
 				description : 'Se fudeu se fudeu o problema é seu.',
 				usage : 'sefudeu`'
+			},
+			title : {
+				description : 'Adiciona um título de honra a um membro do servidor.',
+				usage : 'title` <add/remove/show> <membro> <título>',
+				params : '`add` adiciona o título ao membro especificado.\n`remove` remove o título do membro especificado.\n`show` mostra os títulos do membro especificado.\n`membro` o membro deve ser mencionado.\n`título` a honra que será concedida ao membro.'
 			}
 		};
 

@@ -6,11 +6,20 @@ module.exports = {
     description: 'this is a ping command',
     async execute(message, args) {
 
+        if(!args[0] || (args[0] != 'add' && args[0] != 'remove' && args[0] != 'show')) return message.channel.send('Ai não dá né');
+        if(!args[1]) return message.channel.send('Especifique o membro.');
+        if(!/(<@\!\d+>)/g.test(args[1])) return message.channel.send('Escreve isso direito');
+       
         let guildId = message.channel.guild.id;
-        let memberId = args[1].match(/(<@\!\d+>)/g)[0].match(/\d+/g)[0];
-        let title = args[2];
 
-        if (args[0] == 'add') { //ADD
+        let memberId = args[1].match(/(<@\!\d+>)/g)[0].match(/\d+/g)[0];
+        if(!message.guild.member(memberId)) return message.channel.send('Esse maluco não tá aqui.');
+
+        let title = args.slice(2).join(' ');
+        if(!title && args[0] != 'show') return message.channel.send('Faltou o TITULU!!!!!!');
+        if(args[0] != 'show' && title.length > 40) return message.channel.send('Tá muito grande.');
+
+        if (args[0] == 'add' && message.member.hasPermission('MANAGE_ROLES')) { //ADD
 
             let insertTitleID;
             let titleExists = await database.query(`SELECT GGTitleID FROM GGTitle WHERE LOWER(GGTTitle) = '${title}' AND GGGuildID = ${guildId}`);
@@ -24,26 +33,21 @@ module.exports = {
 
             await database.query(`INSERT INTO GGTitleUser (GGGuildID, GGTUUserID, GGTitleID) VALUES (${guildId}, ${memberId}, ${insertTitleID})`);
             return message.channel.send('Título inserido com sucesso.');
-        }
 
-        if (args[0] == 'remove') { //REMOVE
+        } else if (args[0] == 'remove' && message.member.hasPermission('MANAGE_ROLES')) { //REMOVE
 
             let titleId = await database.query(`SELECT GGTitleID FROM GGTitle WHERE LOWER(GGTTitle) = '${title}' AND GGGuildID = ${guildId}`);
             titleId = titleId.GGTitleID; //pega o id do titulo na tabela de titulos da guilda
-           
+
             let userTitleid = await database.query(`SELECT GGTitleUserID FROM GGTitleuser WHERE GGTUUserID = ${memberId} AND GGGuildID = ${guildId} AND GGTitleID = ${titleId}`);
+            if (!userTitleid) return message.channel.send('Isso nom ecziste');
             userTitleid = userTitleid.GGTitleUserID; // pega o id do titulo na tabela de titulos de usuários onde o user seja da guilda acima e tenha o titulo passado
-            
-            if(userTitleid){
-                await database.query(`DELETE FROM GGTitleuser WHERE GGTitleUserID = ${userTitleid}`);
-                return message.channel.send('Título removido com sucesso.');
-            } else return message.channel.send('Isso nom ecziste');
 
-        }
+            await database.query(`DELETE FROM GGTitleuser WHERE GGTitleUserID = ${userTitleid}`);
+            return message.channel.send('Título removido com sucesso.');
+        } else if (args[0] == 'show') { //SHOW
 
-        if (args[0] == 'show') { //SHOW
-
-            let guildTitleArray = await database.query(`SELECT GGTTitle FROM GGTitleUser INNER JOIN GGTitle USING (GGTitleID) WHERE GGTUUserID = ${memberId} AND GGTitle.GGGuildID = ${guildId}`, true); 
+            let guildTitleArray = await database.query(`SELECT GGTTitle FROM GGTitleUser INNER JOIN GGTitle USING (GGTitleID) WHERE GGTUUserID = ${memberId} AND GGTitle.GGGuildID = ${guildId}`, true);
             let titleArray = guildTitleArray.map((guildTitleUser) => guildTitleUser.GGTTitle);
 
             let guildMemberManager = message.guild.members;
@@ -59,6 +63,6 @@ module.exports = {
                 .setThumbnail(userAvatarUrl)
                 .setDescription(titleArray.length ? titleArray.map((i) => `**${i}**`).join("\n") : 'Você não tem honra alguma...');
             return message.channel.send(displayTitles);
-        }
+        } else return message.channel.send('Tu não tem permissão pra isso.');
     }
 }

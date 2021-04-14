@@ -39,11 +39,11 @@ module.exports = {
             let titleId = await database.query(`SELECT GGTitleID FROM GGTitle WHERE LOWER(GGTTitle) = '${title}' AND GGGuildID = ${guildId}`);
             titleId = titleId.GGTitleID; //pega o id do titulo na tabela de titulos da guilda
 
-            let userTitleid = await database.query(`SELECT GGTitleUserID FROM GGTitleuser WHERE GGTUUserID = ${memberId} AND GGGuildID = ${guildId} AND GGTitleID = ${titleId}`);
+            let userTitleid = await database.query(`SELECT GGTitleUserID FROM GGTitleUser WHERE GGTUUserID = ${memberId} AND GGGuildID = ${guildId} AND GGTitleID = ${titleId}`);
             if (!userTitleid) return message.channel.send('Isso nom ecziste');
             userTitleid = userTitleid.GGTitleUserID; // pega o id do titulo na tabela de titulos de usuários onde o user seja da guilda acima e tenha o titulo passado
 
-            await database.query(`DELETE FROM GGTitleuser WHERE GGTitleUserID = ${userTitleid}`);
+            await database.query(`DELETE FROM GGTitleUser WHERE GGTitleUserID = ${userTitleid}`);
             return message.channel.send('Título removido com sucesso.');
         } else if (args[0] == 'show') { //SHOW
 

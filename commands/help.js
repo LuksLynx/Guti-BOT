@@ -10,8 +10,8 @@ module.exports = {
 		botPrefix = botPrefix.GGPrefix;
 
 		let commands = {
-			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo'],
-			utilityCommands : ['roll','clear','magik','concha','prefix'],
+			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu'],
+			utilityCommands : ['roll','clear','magik','concha','prefix','title'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -88,6 +88,15 @@ module.exports = {
 				description : 'Muda o prefixo do bot para esse servidor.',
 				usage : 'prefix` <prefixo_novo>',
 				params : '`prefixo_novo` é o prefixo que deseja atribuir ao bot no seu servidor, ele pode ter no máximo 3 caracteres, se um prefixo novo não for passado ele irá apenas mostrar o prefixo atual do servidor.'
+			},
+			sefudeu : {
+				description : 'Se fudeu se fudeu o problema é seu.',
+				usage : 'sefudeu`'
+			},
+			title : {
+				description : 'Adiciona um título de honra a um membro do servidor.',
+				usage : 'title` <add/remove/show> <membro> <título>',
+				params : '`add` adiciona o título ao membro especificado.\n`remove` remove o título do membro especificado.\n`show` mostra os títulos do membro especificado.\n`membro` o membro deve ser mencionado.\n`título` a honra que será concedida ao membro.'
 			}
 		};
 

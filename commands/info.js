@@ -16,8 +16,8 @@ module.exports = {
 
         let roleManager = guildMember.roles.cache;
         let roles = roleManager.map((role) => role.name);
-
         roles.pop();
+        
         let id = guildMember.id;
         let joinedAt = guildMember.joinedAt;
         let joinedAtTimeString = joinedAt.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
@@ -41,6 +41,5 @@ module.exports = {
             );
             
         return message.channel.send(Embed);
-        
-        }
+    }
 }

@@ -14,6 +14,7 @@ module.exports = {
 
         let memberId = args[1].match(/(<@\!\d+>)/g)[0].match(/\d+/g)[0];
         if(!message.guild.member(memberId)) return message.channel.send('Esse maluco não tá aqui.');
+        if(args[0] != 'show' && memberId == message.member.id) return message.channel.send('Somente os outros podem te julgar.');
 
         let title = args.slice(2).join(' ');
         if(!title && args[0] != 'show') return message.channel.send('Faltou o TITULU!!!!!!');
@@ -31,12 +32,16 @@ module.exports = {
                 insertTitleID = titleExists.GGTitleID
             }
 
+            let userHasTitle = await database.query(`SELECT GGTitleUserID FROM GGTitleUser WHERE GGGuildID = ${guildId} AND GGTitleID = ${insertTitleID} AND GGTUUserID = ${memberId}`);
+            if(userHasTitle) return message.channel.send('O membro já tem esse título');
+
             await database.query(`INSERT INTO GGTitleUser (GGGuildID, GGTUUserID, GGTitleID) VALUES (${guildId}, ${memberId}, ${insertTitleID})`);
             return message.channel.send('Título inserido com sucesso.');
 
         } else if (args[0] == 'remove' && message.member.hasPermission('MANAGE_ROLES')) { //REMOVE
 
             let titleId = await database.query(`SELECT GGTitleID FROM GGTitle WHERE LOWER(GGTTitle) = '${title}' AND GGGuildID = ${guildId}`);
+            if(!titleId) return message.channel.send('Esse título não existe.');
             titleId = titleId.GGTitleID; //pega o id do titulo na tabela de titulos da guilda
 
             let userTitleid = await database.query(`SELECT GGTitleUserID FROM GGTitleUser WHERE GGTUUserID = ${memberId} AND GGGuildID = ${guildId} AND GGTitleID = ${titleId}`);

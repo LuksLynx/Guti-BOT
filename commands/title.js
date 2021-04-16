@@ -32,8 +32,8 @@ module.exports = {
                 insertTitleID = titleExists.GGTitleID
             }
 
-            let userHastitle = await database.query(`SELECT GGTitleUserID FROM GGTitleUser WHERE GGGuildID = ${guildId} AND GGTitleID = ${insertTitleID} AND GGTUUserID = ${memberId}`);
-            if(userHastitle) return message.channel.send('O membro já tem esse título');
+            let userHasTitle = await database.query(`SELECT GGTitleUserID FROM GGTitleUser WHERE GGGuildID = ${guildId} AND GGTitleID = ${insertTitleID} AND GGTUUserID = ${memberId}`);
+            if(userHasTitle) return message.channel.send('O membro já tem esse título');
 
             await database.query(`INSERT INTO GGTitleUser (GGGuildID, GGTUUserID, GGTitleID) VALUES (${guildId}, ${memberId}, ${insertTitleID})`);
             return message.channel.send('Título inserido com sucesso.');

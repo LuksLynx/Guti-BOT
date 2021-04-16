@@ -11,7 +11,7 @@ module.exports = {
 
 		let commands = {
 			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu'],
-			utilityCommands : ['roll','clear','magik','concha','prefix','title'],
+			utilityCommands : ['roll','clear','magik','concha','prefix','title','info'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -97,6 +97,11 @@ module.exports = {
 				description : 'Adiciona um título de honra a um membro do servidor.',
 				usage : 'title` <add/remove/show> <membro> <título>',
 				params : '`add` adiciona o título ao membro especificado.\n`remove` remove o título do membro especificado.\n`show` mostra os títulos do membro especificado.\n`membro` o membro deve ser mencionado.\n`título` a honra que será concedida ao membro.'
+			},
+			info : {
+				description : 'Mostra algumas informações sobre o membro.',
+				usage : 'info` <membro>',
+				params : '`membro` mencione o membro.'
 			}
 		};
 

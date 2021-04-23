@@ -7,8 +7,7 @@ module.exports = {
     async execute(message, args,) {
 
         let moedas = await axios.get('https://economia.awesomeapi.com.br/all');
-        let valores = moedas.data;
-        valores = Object.values(valores);
+        let valores = Object.values(moedas.data);
         let valorList = (valores.map((i) => i.name.split('/', 1) + " : ``" + i.ask + "``").join('\n'));
         let date = valores[0].create_date;
         date = new Date(date);

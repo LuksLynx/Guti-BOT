@@ -11,7 +11,7 @@ module.exports = {
 
 		let commands = {
 			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu'],
-			utilityCommands : ['roll','clear','magik','concha','prefix','title','info'],
+			utilityCommands : ['roll','clear','magik','concha','prefix','title','info','dolar','moedas'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -102,6 +102,14 @@ module.exports = {
 				description : 'Mostra algumas informações sobre o membro.',
 				usage : 'info` <membro>',
 				params : '`membro` mencione o membro.'
+			},
+			dolar : {
+				description : 'Mostra a cotação atual do dolar para o Real Brasileiro.',
+				usage : 'dolar`'
+			},
+			moedas : {
+				description : 'Mostra da cotação de diversas moedas para o Real Brasileiro.',
+				usage : 'moedas`'
 			}
 		};
 

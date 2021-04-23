@@ -17,7 +17,7 @@ module.exports = {
             .setTitle('TÁ AI ECONOMISTA')
             .setDescription(valorList)
             .setThumbnail('https://cdn.discordapp.com/attachments/541793377373650984/835161709202505818/paulo-guedes.png')
-            .setFooter(date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })+' GMT-3');
+            .setFooter(date.toLocaleString('pt-BR')+' GMT-3');
 
         return message.channel.send(lista);
 

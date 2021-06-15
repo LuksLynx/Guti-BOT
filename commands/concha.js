@@ -12,7 +12,8 @@ module.exports = {
         'V41 P3RGUNT4R N0 P05T0 1P1R4NG4 0T4R10','M4M4 4QU1','Pergunta pro seu pai aquele CORNO','Pergunta pra sua mãe aquela GOSTOSA.',
         'Nada.', 'Você só pode estar de brincadeira né?',':shushing_face: cala boca otário','Nem fudendo',':no_mouth:',':middle_finger:',
         'Ééééééé, não.',':face_with_raised_eyebrow: Será?',':thinking:','Isso depende do quanto você quer comer alguem.',
-        'Teu cú!','Aii mais eu num vo fala rs','Pergunta pro <@713558867249987614>.','Deveria.','Preciso pensar sobre isso.'];
+        'Teu cú!','Aii mais eu num vo fala rs','Pergunta pro <@713558867249987614>.','Deveria.','Preciso pensar sobre isso.','dont know man i dont speak macaco',
+        'Vo vê e te aviso','Meia noite eu te conto','Pode ser que sim'];
         
         //mapAnswers = answers.map((item, index) => `${index+1} - ${item}`).join('\n');
         //console.log(mapAnswers);

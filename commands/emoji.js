@@ -7,7 +7,7 @@ module.exports = {
         const emoteRegex = /<:.+:(\d+)>/gm;
         const animatedEmoteRegex = /<a:.+:(\d+)>/gm;
 
-        let findEmote = message.content.match(hasEmote)
+        let findEmote = message.content.match(hasEmote);
 
         if (emojiId = emoteRegex.exec(findEmote)) {
             let url = "https://cdn.discordapp.com/emojis/" + emojiId[1] + ".png?v=1";

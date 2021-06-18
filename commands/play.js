@@ -89,6 +89,9 @@ module.exports = {
             return;
         } else { clearTimeout(this.guildTimeout[guildId]); }
 
+        if(guildConnection.voiceConnection != null && guildConnection.voiceConnection.dispatcher != null)
+            return guildConnection.songs.push(url);
+
         let getVideoName = await ytdl.getBasicInfo(url);
 
         guildConnection.voiceConnection = await voiceChannel.join();
@@ -130,13 +133,11 @@ module.exports = {
     async playList(url, voiceChannel, textChannel, message) {
 
         let { items: playlistVideos } = await ytpl(url);
-        var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
 
-        if (!guildConnection) {
-            await this.playAudio(playlistVideos[0].shortUrl, voiceChannel, message);
-            playlistVideos.shift();
-            guildConnection = this.guildConnections.get(voiceChannel.guild.id);
-        }
+        await this.playAudio(playlistVideos[0].shortUrl, voiceChannel, message);
+        playlistVideos.shift();
+
+        var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
 
         playlistVideos.forEach(video => guildConnection.songs.push(video.shortUrl));
         textChannel.send(`${playlistVideos.length} vídeos foram adicionados na fila.`);

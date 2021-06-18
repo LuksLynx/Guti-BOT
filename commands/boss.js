@@ -58,7 +58,7 @@ module.exports = {
         let voiceChannel = await Play.getVoiceChannel(message);
         if(!voiceChannel) return;
 
-        Play.playAudio(bossUrl, voiceChannel);
+        Play.playAudio(bossUrl, voiceChannel, message);
 
     }
 }

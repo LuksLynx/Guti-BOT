@@ -10,7 +10,7 @@ module.exports = {
 
         let voiceChannel = await Play.getVoiceChannel(message);
         if(!voiceChannel) return;
-        Play.playAudio(sefudeuUrl, voiceChannel);
+        Play.playAudio(sefudeuUrl, voiceChannel, message);
 
     }
 }

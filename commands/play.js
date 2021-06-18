@@ -46,8 +46,8 @@ module.exports = {
         if (!videoUrl) return;
 
         if (ytpl.validateID(videoUrl)) { // valida se um link é de uma playlist
-            this.playList(videoUrl, voiceChannel, message.channel);
-            return message.channel.send('E A PLAYLIST COMEÇO CAMBADA');
+            this.playList(videoUrl, voiceChannel, message.channel, message);
+            return message.channel.send('**PLAYLIST DETECTADA**');
         }
 
         let guildConnection = this.guildConnections.get(message.guild.id);
@@ -63,8 +63,7 @@ module.exports = {
             }
         }
 
-        this.playAudio(videoUrl, voiceChannel);
-
+        this.playAudio(videoUrl, voiceChannel, message);
     },
     guildConnectionConstruct: {
         voiceConnection: null,
@@ -72,8 +71,7 @@ module.exports = {
     },
     guildTimeout: [],
     guildConnections: new Map(),
-    async playAudio(url, voiceChannel) {
-
+    async playAudio(url, voiceChannel, message){
         var guildId = voiceChannel.guild.id;
         var guildConnection = this.guildConnections.get(guildId);
 
@@ -91,12 +89,15 @@ module.exports = {
             return;
         } else { clearTimeout(this.guildTimeout[guildId]); }
 
+        let getVideoName = await ytdl.getBasicInfo(url);
+
         guildConnection.voiceConnection = await voiceChannel.join();
         guildConnection.voiceConnection.play(ytdl(url, { filter: "audioonly", opusEncoded: true }), { type: 'opus', volume: 0.5 })
             .on("finish", async () => {
                 guildConnection.songs.shift();
-                this.playAudio(guildConnection.songs[0], voiceChannel);
+                this.playAudio(guildConnection.songs[0], voiceChannel, message);
             });
+        message.channel.send(`Tocando: ***${getVideoName.videoDetails.title}***`);
     },
     async getVoiceChannel(message) {
         const channels = message.guild.channels;
@@ -126,13 +127,13 @@ module.exports = {
         return voiceChannel;
 
     },
-    async playList(url, voiceChannel, textChannel) {
+    async playList(url, voiceChannel, textChannel, message) {
 
         let { items: playlistVideos } = await ytpl(url);
         var guildConnection = this.guildConnections.get(voiceChannel.guild.id);
 
         if (!guildConnection) {
-            await this.playAudio(playlistVideos[0].shortUrl, voiceChannel);
+            await this.playAudio(playlistVideos[0].shortUrl, voiceChannel, message);
             playlistVideos.shift();
             guildConnection = this.guildConnections.get(voiceChannel.guild.id);
         }

@@ -10,6 +10,6 @@ module.exports = {
 
         let voiceChannel = await Play.getVoiceChannel(message);
         if(!voiceChannel) return;
-        Play.playAudio(kuboUrl, voiceChannel);
+        Play.playAudio(kuboUrl, voiceChannel, message);
     }
 }

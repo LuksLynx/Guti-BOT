@@ -12,8 +12,10 @@ module.exports = {
 
         guildConnection.songs.length = 0;
 
-        if(voiceConnection != null)
-            return voiceConnection.dispatcher.end();
+        if(voiceConnection != null && voiceConnection.dispatcher != null)
+            voiceConnection.dispatcher.end();
+
+        return message.channel.send('**PAROU TUDO**');
 
     }
 }

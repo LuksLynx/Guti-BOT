@@ -9,7 +9,7 @@ module.exports = {
 
         let voiceChannel = await Play.getVoiceChannel(message);
         if(!voiceChannel) return;
-        Play.playAudio(baiacuUrl, voiceChannel);
+        Play.playAudio(baiacuUrl, voiceChannel, message);
 
     }
 }

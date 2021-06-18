@@ -13,7 +13,7 @@ module.exports = {
         if((!guildConnection.songs) || (guildConnection.songs.length == 1))
             return message.channel.send('Não tem mais nada para pular.');
 
-        if(voiceConnection != null){
+        if(voiceConnection != null && voiceConnection.dispatcher != null){
             return voiceConnection.dispatcher.end();
         }
 

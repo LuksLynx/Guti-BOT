@@ -10,8 +10,8 @@ module.exports = {
 		botPrefix = botPrefix.GGPrefix;
 
 		let commands = {
-			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu'],
-			utilityCommands : ['roll','clear','magik','concha','prefix','title','info','dolar','moedas'],
+			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu','baiacu'],
+			utilityCommands : ['roll','clear','magik','concha','prefix','title','info','dolar','moedas','emoji','poll'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -110,6 +110,20 @@ module.exports = {
 			moedas : {
 				description : 'Mostra da cotação de diversas moedas para o Real Brasileiro.',
 				usage : 'moedas`'
+			},
+			baiacu : {
+				description : 'O baiacu comendo cenourinha muito fofo',
+				usage : 'baiacu`'
+			},
+			emoji : {
+				description : 'Envia a imagem de um emoji',
+				usage : 'emoji` <emoji>',
+				params : '`emoji` o emoji que será enviada a imagem'
+			},
+			poll : {
+				description : 'Cria uma enquete de no máximo 4 opções e minimo 2 que dura 1 minuto',
+				usage : 'poll` <enquete> / <opção 1> / <opção 2> / <opção 3> / <opção 4>',
+				params : '`enquete` é a questão que será votada na enquete \n`opção n` são as opções que podem ser votadas, devem ser separadas por "/"'
 			}
 		};
 

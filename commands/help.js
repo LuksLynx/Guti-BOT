@@ -10,7 +10,7 @@ module.exports = {
 		botPrefix = botPrefix.GGPrefix;
 
 		let commands = {
-			audioCommands : ['play','stop','pause','resume','boss','skip','queue','kubo','sefudeu','baiacu'],
+			audioCommands : ['play','stop','pause','resume','ds1','ds2','ds3','skip','queue','kubo','sefudeu','baiacu'],
 			utilityCommands : ['roll','clear','magik','concha','prefix','title','info','dolar','moedas','emoji','poll'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
@@ -25,10 +25,20 @@ module.exports = {
 				description : 'Encerra qualquer comando de áudio que esteja em execução.',
 				usage : 'stop`',
 			},
-			boss : {
-				description : 'Toca o tema de um boss disponível a sua escolha.',
-				usage : 'boss`\n<número do boss>',
-				params: '`número do boss` deve ser digitado logo após a mensagem que contem os números dos bosses.'
+			ds1 : {
+				description : 'Toca o tema de um boss de Dark Souls 1 disponível a sua escolha.',
+				usage : 'ds1`<nome ou número do boss>\n<número do boss>',
+				params: '`nome ou número do boss` pode ser usado junto ao comando para uma escolha mais rápida\n`número do boss` número do boss na lista, deve ser digitado logo após a mensagem da lista.'
+			},
+			ds2 : {
+				description : 'Toca o tema de um boss de Dark Souls 2 disponível a sua escolha.',
+				usage : 'ds2`<nome ou número do boss>\n<número do boss>',
+				params: '`nome ou número do boss` pode ser usado junto ao comando para uma escolha mais rápida\n`número do boss` número do boss na lista, deve ser digitado logo após a mensagem da lista.'
+			},
+			ds3 : {
+				description : 'Toca o tema de um boss de Dark Souls 3 disponível a sua escolha.',
+				usage : 'ds3`<nome ou número do boss>\n<número do boss>',
+				params: '`nome ou número do boss` pode ser usado junto ao comando para uma escolha mais rápida\n`número do boss` número do boss na lista, deve ser digitado logo após a mensagem da lista.'
 			},
 			roll : {
 				description : 'Rola um dado de 2 até 1000 com um modificador que pode ir até 1000.',

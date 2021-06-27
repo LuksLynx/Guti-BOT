@@ -1,10 +1,11 @@
 const Discord = require("discord.js");
 const ytdl = require('discord-ytdl-core');
 const Play = require("./play.js");
+const StringSimilarity = require('string-similarity');
 
 module.exports = {
-    name: 'boss',
-    description: 'toca o soundtrack de um boss disponivel',
+    name: 'ds3',
+    description: 'toca o soundtrack de um boss de dark sousl 3 disponivel',
     async execute(message, args) {
 
         const bossArray = [
@@ -33,30 +34,46 @@ module.exports = {
             { nome: '**23 - Slave Knight Gael**', url: 'https://www.youtube.com/watch?v=xggWJLgN-Es' }
         ];
 
-        const newEmbed = new Discord.MessageEmbed()
-            .setColor('#ff0229')
-            .setTitle('ESCOLHA SEU BOSS')
-            .setDescription(bossArray.map((i) => i.nome).join("\n"));
-        message.channel.send(newEmbed);
-        const filter = m => (m.content >= 1 && m.content <= bossArray.length + 1);
-        let bossUrl = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
-            .then(result => {
+        let bossUrl;
 
-                let chosen = result.first().content;
-                let url = bossArray[chosen - 1].url;
+        if (!args || args == '') {
 
-                return url;
+            const newEmbed = new Discord.MessageEmbed()
+                .setColor('#ff0229')
+                .setThumbnail('https://cdn.discordapp.com/attachments/541793377373650984/857362207028150292/Dark_Souls_III_Icon_PNG.png')
+                .setTitle('ESCOLHA SEU BOSS DE DARK SOULS 3')
+                .setFooter('30 segundos para escolher')
+                .setDescription(bossArray.map((i) => i.nome).join("\n"));
+            message.channel.send(newEmbed);
+            const filter = m => (m.content >= 1 && m.content <= bossArray.length + 1);
+            bossUrl = await message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] })
+                .then(result => {
 
-            }).catch(error => {
-                console.error(error);
-                return false;
-            });
+                    let chosen = result.first().content;
+                    let url = bossArray[chosen - 1].url;
 
-       
-        if(!bossUrl) return;
+                    return url;
+
+                }).catch(error => {
+                    console.error(error);
+                    return false;
+                });
+
+        } else {
+
+            let search = args.join(' ').toLowerCase();
+            let bestMatch = StringSimilarity.findBestMatch(search, bossArray.map(boss => boss.nome));
+            
+            bossUrl = bossArray[bestMatch.bestMatchIndex].url;
+
+            if (!bossUrl) return message.channel.send('Não achei nada');
+
+        }
+
+        if (!bossUrl) return;
 
         let voiceChannel = await Play.getVoiceChannel(message);
-        if(!voiceChannel) return;
+        if (!voiceChannel) return;
 
         Play.playAudio(bossUrl, voiceChannel, message);
 

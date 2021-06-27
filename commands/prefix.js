@@ -5,6 +5,8 @@ module.exports = {
     description: 'muda o prefixo do bot no servidor',
     async execute(message, args) {
 
+        if(!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('Você não é Administrador');
+
         var currentPrefix = await database.query(`SELECT GGPrefix FROM GGuild WHERE GGGuildID = ${message.guild.id}`);
 
         if (args.length == 0) return message.channel.send(`Seu prefixo atual é : ${currentPrefix.GGPrefix}`);

@@ -8,28 +8,35 @@ module.exports = {
     async execute(message, args) {
 
         if (!Urlregex.test(args[0])) return message.channel.send('URL inválido');
-        let guildId = message.guild.id;
+        
+		let guildId = message.guild.id;
         let channelId = message.channel.id;
         let mangaId = args[0].split('title/', 2).slice(1);
-        try { // valida se o manga existe ou não
-            await (MFA.Manga.get(mangaId));
+        
+		try {
+            var manga = await (MFA.Manga.get(mangaId));
         } catch (error) {
-            console.log(error);
-            return message.channel.send('Algo deu errado, procure algum especialista!');
-        }
-        let manga = await (MFA.Manga.get(mangaId));
+			
+			if(error.code===2)
+				return message.channel.send('A URL não foi encontrada. Digite ela corretamente.');
+			else if(error.code===3)
+				return message.channel.send('A API do MangaDex está com algum problema. Aguarde alguns momentos e tente novamente.');
+            
+			return message.channel.send('Algo deu errado, procure algum especialista!');
 
-        let lastChapter = await manga.getFeed({
+        }
+
+		let lastChapter = await manga.getFeed({
             order: { volume: "desc", chapter: "desc" },
             limit: 1
         }).then(chapter => chapter.shift().chapter);
 
-        /*console.log(guildId);
-        console.log(channelId);
-        console.log(mangaId[0]);
-        console.log(lastChapter);*/
+        await database.query(`
+			INSERT INTO GGManga (GGGuildID, GGMUid, GGMLastChapter, GGMChannel)
+				VALUES
+			('${guildId}', '${mangaId[0]}', '${lastChapter}', '${channelId}')
+		`);
 
-        await database.query(`INSERT INTO GGManga (GGGuildID, GGMUid, GGMLastChapter, GGMChannel) VALUES ('${guildId}', '${mangaId[0]}', '${lastChapter}', '${channelId}')`);
         message.channel.send(`**${manga.title}** adicionado com sucesso!`);
 
     }

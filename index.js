@@ -1,10 +1,13 @@
 require('dotenv').config();
 const database = require('./database.js');
 exports.database = database;
+const cron = require('node-cron');
 
 const fs = require('fs');
 const Discord = require('discord.js');
+const MFA = require('mangadex-full-api');
 const utils = require('./utils.js');
+const fetch = require('node-fetch');
 
 const client = new Discord.Client();
 
@@ -18,12 +21,12 @@ for (const file of commandFiles) {
 /*DATABASE*/
 client.on('guildCreate', async guild => {
   const guildId = await database.query(`SELECT GGuildID FROM GGuild WHERE GGGuildID = ${guild.id}`);
-  if(!guildId){
+  if (!guildId) {
     await database.query(`INSERT INTO GGuild (GGGuildID, GGname) VALUES (${guild.id}, '${guild.name}')`);
   } else {
     await database.query(`UPDATE GGuild SET GGStatus = 1 WHERE GGuildID = ${guildId.GGuildID}`);
   }
-  
+
 });
 
 client.on('guildDelete', async guild => {
@@ -57,7 +60,7 @@ client.on('message', async (message) => {
   var prefix = await database.query(`SELECT GGPrefix FROM GGuild WHERE GGGuildID = ${message.guild.id}`);
   prefix = prefix.GGPrefix;
 
-  if(message.content == 'gutiprefix') return message.channel.send(`O prefixo do Guti é ${prefix}`); 
+  if (message.content == 'gutiprefix') return message.channel.send(`O prefixo do Guti é ${prefix}`);
 
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -71,5 +74,43 @@ client.on('message', async (message) => {
   }
 
 });
+
+/* CRON DO MANGADEX */
+const mangadex = async () => {
+
+  let activeMangas = await database.query('SELECT * FROM GGManga WHERE GGMStatus = 1', true);
+
+  activeMangas.forEach(async element => {
+
+    let guildObj = client.guilds.cache.get(element.GGGuildID);
+    let mangaChannel = guildObj.channels.cache.get(element.GGMChannel);
+
+    let thisManga = await MFA.Manga.get(element.GGMUid);
+
+    let mangaCoverResponse = await fetch(`https://api.mangadex.org/cover/${thisManga.mainCover.id}`).then(res => res.json());
+    let chapter = await thisManga.getFeed({ order: { volume: "desc", chapter: "desc" }, limit: 1 }).then(chapter => chapter.shift());
+
+    let currentChapter = chapter.chapter;
+    let currentChapterUrl = `https://mangadex.org/chapter/${chapter.id}`;
+    let mangaCover = `https://uploads.mangadex.org/covers/${thisManga.id}/${mangaCoverResponse.data.attributes.fileName}`;
+
+    if (currentChapter != element.GGMLastChapter) {
+      await database.query(`UPDATE GGManga SET GGMLastChapter = '${currentChapter}' WHERE GGGuildID = '${element.GGGuildID}' AND GGMUid = '${element.GGMUid}'`);
+
+      const mangaEmbed = new Discord.MessageEmbed()
+        .setColor('#a600ff')
+        .setTitle(`${thisManga.title} - ${currentChapter}`)
+        .setURL(currentChapterUrl)
+        .setDescription('CAPÍTULO NOVO DISPONÍVEL')
+        .setThumbnail('https://cdn.discordapp.com/attachments/514299610366345216/879828658011910194/xbt_jW78_400x400.jpg')
+        .setImage(mangaCover);
+
+      mangaChannel.send(mangaEmbed);
+    }
+  });
+}
+/* FIM DO CRON */
+
+cron.schedule("* */24 * * *", mangadex);
 
 client.login(process.env.BOT_TOKEN);

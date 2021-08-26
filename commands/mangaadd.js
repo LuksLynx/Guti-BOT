@@ -8,36 +8,50 @@ module.exports = {
     async execute(message, args) {
 
         if (!Urlregex.test(args[0])) return message.channel.send('URL inválido');
-        
-		let guildId = message.guild.id;
+
+        let guildId = message.guild.id;
         let channelId = message.channel.id;
         let mangaId = args[0].split('title/', 2).slice(1);
-        
-		try {
+
+        try {
             var manga = await (MFA.Manga.get(mangaId));
         } catch (error) {
-			
-			if(error.code===2)
-				return message.channel.send('A URL não foi encontrada. Digite ela corretamente.');
-			else if(error.code===3)
-				return message.channel.send('A API do MangaDex está com algum problema. Aguarde alguns momentos e tente novamente.');
-            
-			return message.channel.send('Algo deu errado, procure algum especialista!');
 
-        }
+            if (error.code === 2)
+                return message.channel.send('A URL não foi encontrada. Digite ela corretamente.');
+            else if (error.code === 3)
+                return message.channel.send('A API do MangaDex está com algum problema. Aguarde alguns momentos e tente novamente.');
 
-		let lastChapter = await manga.getFeed({
+            return message.channel.send('Algo deu errado, procure algum especialista!');
+
+        };
+
+        let lastChapter = await manga.getFeed({
             order: { volume: "desc", chapter: "desc" },
             limit: 1
         }).then(chapter => chapter.shift().chapter);
 
-        await database.query(`
+        let hasManga = await database.query(`SELECT GGMStatus FROM GGManga WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId[0]}'`);
+
+        if (!hasManga) {
+
+            await database.query(`
 			INSERT INTO GGManga (GGGuildID, GGMUid, GGMLastChapter, GGMChannel)
 				VALUES
 			('${guildId}', '${mangaId[0]}', '${lastChapter}', '${channelId}')
 		`);
 
-        message.channel.send(`**${manga.title}** adicionado com sucesso!`);
+            return message.channel.send(`**${manga.title}** adicionado com sucesso!`);
 
+        } else if (hasManga.GGMStatus == 1) {
+
+            return message.channel.send(`**${manga.title}** já está ativo no servidor!`);
+
+        } else if (hasManga.GGMStatus == 0) {
+
+            await database.query(`UPDATE GGManga SET GGMStatus = 1 WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId}'`);
+            await database.query(`UPDATE GGManga SET GGMChannel = ${channelId} WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId}'`);
+            return message.channel.send(`**${manga.title}** foi reativado no servidor!`);
+        }
     }
 }

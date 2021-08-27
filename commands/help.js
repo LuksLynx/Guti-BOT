@@ -146,12 +146,12 @@ module.exports = {
 			mangaadd : {
 				description : 'Adiciona notificações de capítulos novos de um manga do site Mangadex para o servidor',
 				usage : 'mangaadd` <https://mangadex.org/title/ID_DO_MANGA>',
-				params : 'basta colocar o link do manga que deseja ativar, um exemplo do formato do link : "https://mangadex.org/title/6a5ffb3e-7c8d-4f6c-8408-e2b403df66fd"'
+				params : 'basta colocar o link do manga que deseja ativar, um exemplo do formato do link : "https://mangadex.org/title/a1c7c817-4e59-43b7-9365-09675a149a6f/one-piece"'
 			},
 			mangadel : {
 				description : 'Remove notificações de capítulos novos de um manga do site Mangadex para o servidor',
 				usage : 'mangadel` <https://mangadex.org/title/ID_DO_MANGA>',
-				params : 'basta colocar o link do manga que deseja desativar, um exemplo do formato do link : "https://mangadex.org/title/6a5ffb3e-7c8d-4f6c-8408-e2b403df66fd"'
+				params : 'basta colocar o link do manga que deseja desativar, um exemplo do formato do link : "https://mangadex.org/title/a1c7c817-4e59-43b7-9365-09675a149a6f/one-piece"'
 			}
 		};
 

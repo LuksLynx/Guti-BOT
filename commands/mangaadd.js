@@ -35,23 +35,25 @@ module.exports = {
 
         if (!hasManga) {
 
-            await database.query(`
+		await database.query(`
 			INSERT INTO GGManga (GGGuildID, GGMUid, GGMLastChapter, GGMChannel)
 				VALUES
 			('${guildId}', '${mangaId[0]}', '${lastChapter}', '${channelId}')
 		`);
 
-            return message.channel.send(`**${manga.title}** adicionado com sucesso!`);
+		return message.channel.send(`**${manga.title}** adicionado com sucesso!`);
 
         } else if (hasManga.GGMStatus == 1) {
 
-            return message.channel.send(`**${manga.title}** já está ativo no servidor!`);
+		return message.channel.send(`**${manga.title}** já está ativo no servidor!`);
 
         } else if (hasManga.GGMStatus == 0) {
 
-            await database.query(`UPDATE GGManga SET GGMStatus = 1 WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId}'`);
-            await database.query(`UPDATE GGManga SET GGMChannel = ${channelId} WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId}'`);
-            return message.channel.send(`**${manga.title}** foi reativado no servidor!`);
+		await database.query(`UPDATE GGManga SET GGMStatus = 1 WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId}'`);
+		await database.query(`UPDATE GGManga SET GGMChannel = ${channelId} WHERE GGGuildID = '${guildId}' AND GGMUid = '${mangaId}'`);
+		
+		return message.channel.send(`**${manga.title}** foi reativado no servidor!`);
+		
         }
     }
 }

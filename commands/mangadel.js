@@ -1,6 +1,6 @@
 const MFA = require('mangadex-full-api');
 const { database } = require("../index.js");
-const Urlregex = new RegExp('^(https:\/\/mangadex\.org\/title\/[A-Za-z0-9-]+)$');
+const Urlregex = new RegExp('^(https:\/\/mangadex\.org\/title\/[A-Za-z0-9-]+\/[A-Za-z0-9-]+)$');
 
 module.exports = {
     name: 'mangadel',
@@ -10,7 +10,7 @@ module.exports = {
         if (!Urlregex.test(args[0])) return message.channel.send('URL inválido');
 
         let guildId = message.guild.id;
-        let mangaId = args[0].split('title/', 2).slice(1);
+        let mangaId = args[0].split('/', 5).slice(4);
 
         try {
             var manga = await (MFA.Manga.get(mangaId));

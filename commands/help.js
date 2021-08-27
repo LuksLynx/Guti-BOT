@@ -10,8 +10,8 @@ module.exports = {
 		botPrefix = botPrefix.GGPrefix;
 
 		let commands = {
-			audioCommands : ['play','stop','pause','resume','ds1','ds2','ds3','skip','queue','kubo','sefudeu','baiacu'],
-			utilityCommands : ['roll','clear','magik','concha','prefix','title','info','dolar','moedas','emoji','poll'],
+			audioCommands : ['play','stop','pause','resume','ds1','ds2','ds3','skip','queue','kubo','sefudeu','baiacu','madruga'],
+			utilityCommands : ['roll','clear','magik','concha','prefix','title','info','dolar','moedas','emoji','poll','manga','mangaadd','mangadel'],
 			nsfwCommands : ['f95','nhentai','rule34']
 		};
 
@@ -134,6 +134,24 @@ module.exports = {
 				description : 'Cria uma enquete de no máximo 4 opções e minimo 2 que dura 1 minuto',
 				usage : 'poll` <enquete> / <opção 1> / <opção 2> / <opção 3> / <opção 4>',
 				params : '`enquete` é a questão que será votada na enquete \n`opção n` são as opções que podem ser votadas, devem ser separadas por "/"'
+			},
+			madruga : {
+				description : 'SEU MADRUGA WILL GO ON!',
+				usage : 'madruga`'
+			},
+			manga : {
+				description : 'Mostra os mangas com notificação ativa nesse servidor',
+				usage : 'manga`'
+			},
+			mangaadd : {
+				description : 'Adiciona notificações de capítulos novos de um manga do site Mangadex para o servidor',
+				usage : 'mangaadd` <https://mangadex.org/title/ID_DO_MANGA>',
+				params : 'basta colocar o link do manga que deseja ativar, um exemplo do formato do link : "https://mangadex.org/title/6a5ffb3e-7c8d-4f6c-8408-e2b403df66fd"'
+			},
+			mangadel : {
+				description : 'Remove notificações de capítulos novos de um manga do site Mangadex para o servidor',
+				usage : 'mangadel` <https://mangadex.org/title/ID_DO_MANGA>',
+				params : 'basta colocar o link do manga que deseja desativar, um exemplo do formato do link : "https://mangadex.org/title/6a5ffb3e-7c8d-4f6c-8408-e2b403df66fd"'
 			}
 		};
 

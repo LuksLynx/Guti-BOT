@@ -8,7 +8,7 @@ module.exports = {
     async execute(message, args) {
 
         let mangasId = await database.query(`SELECT GGMUid FROM GGManga WHERE GGGuildID = '${message.guild.id}' AND GGMStatus = 1`, true);
-        if (!mangasId) return message.channel.send('Não há notificações de mangas ativas nesse servidor...');
+        if (mangasId == '' || mangasId == null || mangasId == undefined) return message.channel.send('Não há notificações de mangas ativas nesse servidor...');
 
         let mangas = [];
 

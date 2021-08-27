@@ -14,7 +14,7 @@ module.exports = {
 
         for(const mangaId of mangasId) {
             let manga = await MFA.Manga.get(mangaId.GGMUid);
-            let mangaUrl = `https://mangadex.org/title/${mangaId.GGMUid}`
+            let mangaUrl = `https://mangadex.org/title/${mangaId.GGMUid}`;
             let mangaTitle = manga.title;
             mangas.push({
                 url: mangaUrl,
